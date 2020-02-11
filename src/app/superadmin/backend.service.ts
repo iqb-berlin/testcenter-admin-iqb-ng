@@ -11,7 +11,6 @@ export class BackendService {
   constructor(
     @Inject('SERVER_URL') private readonly serverUrl: string,
     private http: HttpClient) {
-      this.serverUrl = this.serverUrl + 'php/sys.php/';
     }
 
   getUsers(): Observable<NameOnly[]> {
@@ -24,7 +23,7 @@ export class BackendService {
 
   addUser(name: string, password: string): Observable<Boolean> {
     return this.http
-      .post<Boolean>(this.serverUrl + 'user/add', {n: name, p: password})
+      .put<Boolean>(this.serverUrl + 'user', {n: name, p: password})
         .pipe(
           catchError(() => of(false))
         );

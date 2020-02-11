@@ -80,7 +80,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.bs.addUser((<FormGroup>result).get('name').value,
               (<FormGroup>result).get('pw').value).subscribe(
                 respOk => {
-                  if (respOk) {
+                  if (respOk !== false) {
                     this.snackBar.open('Nutzer hinzugefügt', '', {duration: 1000});
                     this.updateObjectList();
                   } else {
@@ -118,6 +118,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         if (typeof result !== 'undefined') {
           if (result !== false) {
             this.dataLoading = true;
+            console.log(selectedRows);
             this.bs.changePassword(selectedRows[0]['name'],
                 (<FormGroup>result).get('pw').value).subscribe(
                   respOk => {
