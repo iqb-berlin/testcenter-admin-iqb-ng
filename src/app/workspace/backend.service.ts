@@ -46,27 +46,24 @@ export class BackendService {
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  getBookletsStarted(groups: string[]): Observable<BookletsStarted[] | ServerError> {
+  getBookletsStarted(workspaceId: number, groups: string[]): Observable<BookletsStarted[] | ServerError> {
 
     return this.http
-      .post<BookletsStarted[]>(this.serverUrl + 'getBookletsStarted.php', {g: groups})
+      .post<BookletsStarted[]>(this.serverUrl + `/workspace/${workspaceId}/booklets/started`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  lockBooklets(groups: string[]): Observable<boolean | ServerError> {
+  lockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
+
     return this.http
-      .post<boolean>(this.serverUrlSlim + 'lock', {g: groups})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .post<boolean>(this.serverUrl + `/workspace/${workspaceId}/lock`, {groups: groups})
+      .pipe(catchError(ErrorHandler.handle));
   }
 
-  unlockBooklets(groups: string[]): Observable<boolean | ServerError> {
+  unlockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
     return this.http
-      .post<boolean>(this.serverUrlSlim + 'unlock', {g: groups})
-        .pipe(
-            catchError(ErrorHandler.handle)
-          );
+      .post<boolean>(this.serverUrl + `/workspace/${workspaceId}/unlock`, {groups: groups})
+      .pipe(catchError(ErrorHandler.handle));
 }
 
   getMonitorData(workspaceId: number): Observable<MonitorData[] | ServerError> {

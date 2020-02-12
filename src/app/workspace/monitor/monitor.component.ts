@@ -69,7 +69,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
       this.tableselectionCheckbox.selected.forEach(element => {
         selectedGroups.push(element.groupname);
       });
-      this.bs.getBookletsStarted(selectedGroups).subscribe(bData => {
+      this.bs.getBookletsStarted(this.wds.ws, selectedGroups).subscribe(bData => {
 
           const bookletList = bData as BookletsStarted[];
           if (bookletList.length > 0) {
@@ -107,17 +107,12 @@ export class MonitorComponent implements OnInit, OnDestroy {
       this.tableselectionCheckbox.selected.forEach(element => {
         selectedGroups.push(element.groupname);
       });
-      this.bs.lockBooklets(selectedGroups).subscribe(success => {
+      this.bs.lockBooklets(this.wds.ws, selectedGroups).subscribe(success => {
         if (success instanceof ServerError) {
           this.wds.setNewErrorMsg(success as ServerError);
           this.snackBar.open('Testhefte konnten nicht gesperrt werden.', 'Systemfehler', {duration: 3000});
         } else {
-          const ok = success as boolean;
-          if (ok) {
-            this.snackBar.open('Testhefte wurden gesperrt.', 'Sperrung', {duration: 1000});
-          } else {
-            this.snackBar.open('Testhefte konnten nicht gesperrt werden.', 'Fehler', {duration: 3000});
-          }
+          this.snackBar.open('Testhefte wurden gesperrt.', 'Sperrung', {duration: 1000});
         }
         this.dataLoading = false;
         this.updateTable();
@@ -132,17 +127,12 @@ export class MonitorComponent implements OnInit, OnDestroy {
       this.tableselectionCheckbox.selected.forEach(element => {
         selectedGroups.push(element.groupname);
       });
-      this.bs.unlockBooklets(selectedGroups).subscribe(success => {
+      this.bs.unlockBooklets(this.wds.ws, selectedGroups).subscribe(success => {
         if (success instanceof ServerError) {
           this.wds.setNewErrorMsg(success as ServerError);
           this.snackBar.open('Testhefte konnten nicht freigegeben werden.', 'Systemfehler', {duration: 3000});
         } else {
-          const ok = success as boolean;
-          if (ok) {
-            this.snackBar.open('Testhefte wurden freigegeben.', 'Sperrung', {duration: 1000});
-          } else {
-            this.snackBar.open('Testhefte konnten nicht freigegeben werden.', 'Fehler', {duration: 3000});
-          }
+          this.snackBar.open('Testhefte wurden freigegeben.', 'Sperrung', {duration: 1000});
         }
         this.dataLoading = false;
         this.updateTable();
