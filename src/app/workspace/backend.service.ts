@@ -31,12 +31,11 @@ export class BackendService {
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  deleteFiles(filesToDelete: Array<string>): Observable<string | ServerError> {
+  deleteFiles(workspaceId: number, filesToDelete: Array<string>): Observable<FileDeletionReport | ServerError> {
+
     return this.http
-      .post<string>(this.serverUrlSlim + 'delete', {f: filesToDelete})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .request<FileDeletionReport>('delete', this.serverUrl + `workspace/${workspaceId}/files`, {body: {f: filesToDelete}})
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   checkWorkspace(): Observable<CheckWorkspaceResponseData | ServerError> {
@@ -149,4 +148,10 @@ export class BackendService {
             catchError(ErrorHandler.handle)
           );
   }
+}
+
+export interface FileDeletionReport {
+  deleted: string[];
+  not_allowed: string[];
+  did_not_exist: string[];
 }

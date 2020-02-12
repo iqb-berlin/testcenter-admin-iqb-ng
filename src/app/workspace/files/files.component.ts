@@ -6,7 +6,7 @@ import { ConfirmDialogComponent, ConfirmDialogData, MessageDialogComponent,
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BackendService } from '../backend.service';
+import {BackendService, FileDeletionReport} from '../backend.service';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -68,7 +68,7 @@ export class FilesComponent implements OnInit, OnDestroy {
       const filesToDelete = [];
       this.serverfiles.data.forEach(element => {
         if (element.isChecked) {
-          filesToDelete.push(element.type + '::' + element.filename);
+          filesToDelete.push(element.type + '/' + element.filename);
         }
       });
 
@@ -93,17 +93,22 @@ export class FilesComponent implements OnInit, OnDestroy {
           if (result !== false) {
             // =========================================================
             this.dataLoading = true;
-            this.bs.deleteFiles(filesToDelete).subscribe(deletefilesresponse => {
-              if (deletefilesresponse instanceof ServerError) {
-                this.wds.setNewErrorMsg(deletefilesresponse as ServerError);
+            this.bs.deleteFiles(this.wds.ws, filesToDelete).subscribe((fileDeletionReport: FileDeletionReport|ServerError) => {
+              if (fileDeletionReport instanceof ServerError) {
+                this.wds.setNewErrorMsg(fileDeletionReport as ServerError);
               } else {
-                const deletefilesresponseOk = deletefilesresponse as string;
-                if ((deletefilesresponseOk.length > 5) && (deletefilesresponseOk.substr(0, 2) === 'e:')) {
-                  this.snackBar.open(deletefilesresponseOk.substr(2), 'Fehler', {duration: 1000});
-                } else {
-                  this.snackBar.open(deletefilesresponseOk, '', {duration: 1000});
-                  this.updateFileList();
+
+                const message = [];
+                if (fileDeletionReport.deleted.length > 0) {
+                  message.push(fileDeletionReport.deleted.length + ' Dateien erfolgreich gelöscht.');
                 }
+                if (fileDeletionReport.not_allowed.length > 0) {
+                  message.push(fileDeletionReport.not_allowed.length + ' Dateien konnten nicht gelöscht werden.');
+                }
+
+                this.snackBar.open(message.join('<br>'), message.length > 1 ? 'Achtung' : '',  {duration: 1000});
+
+                this.updateFileList();
                 this.wds.setNewErrorMsg();
               }
             });
