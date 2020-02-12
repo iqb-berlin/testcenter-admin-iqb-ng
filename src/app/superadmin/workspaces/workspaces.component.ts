@@ -178,7 +178,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
           selectedRows.forEach((r: IdAndName) => workspacesToDelete.push(r.id));
           this.bs.deleteWorkspaces(workspacesToDelete).subscribe(
             respOk => {
-              if (respOk) {
+              if (respOk !== false) {
                 this.snackBar.open('Arbeitsbereich/e gelöscht', '', {duration: 1000});
                 this.updateObjectList();
                 this.dataLoading = false;
