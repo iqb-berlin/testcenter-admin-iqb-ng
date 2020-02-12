@@ -46,7 +46,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
       this.resultDataSource = new MatTableDataSource<ResultData>([]);
     } else {
       this.dataLoading = true;
-      this.bs.getResultData().subscribe(
+      this.bs.getResultData(this.wds.ws).subscribe(
         (resultData: ResultData[]) => {
           this.dataLoading = false;
           this.resultDataSource = new MatTableDataSource<ResultData>(resultData);

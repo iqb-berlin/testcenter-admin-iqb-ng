@@ -41,7 +41,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
   updateTable() {
     this.dataLoading = true;
     this.tableselectionCheckbox.clear();
-    this.bs.getMonitorData().subscribe(
+    this.bs.getMonitorData(this.wds.ws).subscribe(
       (monitorData: MonitorData[]) => {
         this.dataLoading = false;
         this.monitorDataSource = new MatTableDataSource<MonitorData>(monitorData);

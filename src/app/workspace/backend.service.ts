@@ -26,6 +26,7 @@ export class BackendService {
 
 
   getFiles(workspaceId: number): Observable<GetFileResponseData[] | ServerError> {
+
     return this.http
       .get<GetFileResponseData[]>(this.serverUrl + `workspace/${workspaceId}/files`)
       .pipe(catchError(ErrorHandler.handle));
@@ -39,17 +40,17 @@ export class BackendService {
   }
 
   checkWorkspace(workspaceId: number): Observable<CheckWorkspaceResponseData | ServerError> {
+
     return this.http
       .get<CheckWorkspaceResponseData>(this.serverUrl + `/workspace/${workspaceId}/validation`, {})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   getBookletsStarted(groups: string[]): Observable<BookletsStarted[] | ServerError> {
+
     return this.http
       .post<BookletsStarted[]>(this.serverUrl + 'getBookletsStarted.php', {g: groups})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   lockBooklets(groups: string[]): Observable<boolean | ServerError> {
@@ -68,17 +69,17 @@ export class BackendService {
           );
 }
 
-  getMonitorData(): Observable<MonitorData[] | ServerError> {
+  getMonitorData(workspaceId: number): Observable<MonitorData[] | ServerError> {
     return this.http
-      .post<MonitorData[]>(this.serverUrl + 'getMonitorData.php', {})
+      .get<MonitorData[]>(this.serverUrl + `/workspace/${workspaceId}/status`, {})
         .pipe(
           catchError(ErrorHandler.handle)
         );
 }
 
-  getResultData(): Observable<ResultData[]> {
+  getResultData(workspaceId: number): Observable<ResultData[]> {
     return this.http
-      .post<ResultData[]>(this.serverUrl + 'getResultData.php', {})
+      .get<ResultData[]>(this.serverUrl + `/workspace/${workspaceId}/results`, {})
         .pipe(
           catchError(() => [])
         );
