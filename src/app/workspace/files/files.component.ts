@@ -133,7 +133,7 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.serverfiles = new MatTableDataSource([]);
     } else {
       this.dataLoading = true;
-      this.bs.getFiles().subscribe(
+      this.bs.getFiles(this.wds.ws).subscribe(
         (filedataresponse: GetFileResponseData[]) => {
           this.serverfiles = new MatTableDataSource(filedataresponse);
           this.serverfiles.sort = this.sort;

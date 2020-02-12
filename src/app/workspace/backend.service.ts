@@ -4,8 +4,8 @@ import {Injectable, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {WorkspaceDataService} from "./workspacedata.service";
-import {MainDataService} from "../maindata.service";
+import {WorkspaceDataService} from './workspacedata.service';
+import {MainDataService} from '../maindata.service';
 import { ErrorHandler, ServerError } from 'iqb-components';
 
 @Injectable()
@@ -22,16 +22,13 @@ export class BackendService {
 
     this.serverUrlSlim = this.serverUrl + 'php/ws.php/';
     this.serverUrlSysCheck = this.serverUrl + 'php_admin/';
-    this.serverUrl = this.serverUrl + 'php/';
   }
 
 
-  getFiles(): Observable<GetFileResponseData[] | ServerError> {
+  getFiles(workspaceId: number): Observable<GetFileResponseData[] | ServerError> {
     return this.http
-      .get<GetFileResponseData[]>(this.serverUrlSlim + 'filelist')
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .get<GetFileResponseData[]>(this.serverUrl + `workspace/${workspaceId}/files`)
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   deleteFiles(filesToDelete: Array<string>): Observable<string | ServerError> {
@@ -125,7 +122,8 @@ export class BackendService {
   getSysCheckReportList(): Observable<SysCheckStatistics[] | ServerError> {
     const loginData = this.mds.loginData$.getValue();
     return this.http
-      .post<SysCheckStatistics[]>(this.serverUrlSysCheck + 'getSysCheckReportList.php', {ws: this.wds.workspaceId$.getValue(), at: loginData.admintoken})
+      .post<SysCheckStatistics[]>(this.serverUrlSysCheck + 'getSysCheckReportList.php',
+        {ws: this.wds.workspaceId$.getValue(), at: loginData.admintoken})
         .pipe(
           catchError(ErrorHandler.handle)
         );
