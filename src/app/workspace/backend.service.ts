@@ -38,12 +38,10 @@ export class BackendService {
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  checkWorkspace(): Observable<CheckWorkspaceResponseData | ServerError> {
+  checkWorkspace(workspaceId: number): Observable<CheckWorkspaceResponseData | ServerError> {
     return this.http
-      .post<CheckWorkspaceResponseData>(this.serverUrl + 'checkWorkspace.php', {})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .get<CheckWorkspaceResponseData>(this.serverUrl + `/workspace/${workspaceId}/validation`, {})
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   getBookletsStarted(groups: string[]): Observable<BookletsStarted[] | ServerError> {

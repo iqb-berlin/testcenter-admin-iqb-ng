@@ -167,7 +167,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.checkInfos = [];
 
     this.dataLoading = true;
-    this.bs.checkWorkspace().subscribe(
+    this.bs.checkWorkspace(this.wds.ws).subscribe(
       (checkResponse: CheckWorkspaceResponseData) => {
         this.checkErrors = checkResponse.errors;
         this.checkWarnings = checkResponse.warnings;
