@@ -39,10 +39,17 @@ export class BackendService {
 
   deleteUsers(users: string[]): Observable<Boolean> {
     return this.http
-      .post<Boolean>(this.serverUrl + 'users/delete', {u: users})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .request<boolean>(
+        'delete',
+        this.serverUrl + 'users',
+        {
+          body: {
+            u: users,
+          }
+        })
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   getWorkspacesByUser(username: string): Observable<IdRoleData[]> {
