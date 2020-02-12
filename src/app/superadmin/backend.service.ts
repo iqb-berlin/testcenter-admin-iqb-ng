@@ -29,9 +29,9 @@ export class BackendService {
         );
   }
 
-  changePassword(name: string, password: string): Observable<Boolean> {
+  changePassword(userId: number, password: string): Observable<Boolean> {
     return this.http
-      .post<Boolean>(this.serverUrl + 'user/pw', {n: name, p: password})
+      .patch<Boolean>(this.serverUrl + `user/${userId}/password`, {p: password})
         .pipe(
           catchError(() => of(false))
         );

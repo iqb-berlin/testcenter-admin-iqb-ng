@@ -118,11 +118,10 @@ export class UsersComponent implements OnInit, OnDestroy {
         if (typeof result !== 'undefined') {
           if (result !== false) {
             this.dataLoading = true;
-            console.log(selectedRows);
-            this.bs.changePassword(selectedRows[0]['name'],
+            this.bs.changePassword(parseInt(selectedRows[0]['id'], 10),
                 (<FormGroup>result).get('pw').value).subscribe(
                   respOk => {
-                    if (respOk) {
+                    if (respOk !== false) {
                       this.snackBar.open('Kennwort geändert', '', {duration: 1000});
                     } else {
                       this.snackBar.open('Konnte Kennwort nicht ändern', 'Fehler', {duration: 1000});
