@@ -125,7 +125,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
             this.bs.renameWorkspace(selectedRows[0].id,
                 (<FormGroup>result).get('name').value).subscribe(
                   respOk => {
-                    if (respOk) {
+                    if (respOk !== false) {
                       this.snackBar.open('Arbeitsbereich geändert', '', {duration: 1000});
                       this.updateObjectList();
                     } else {

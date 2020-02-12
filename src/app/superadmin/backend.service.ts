@@ -84,19 +84,21 @@ export class BackendService {
   }
 
   renameWorkspace(wsId: number, wsName: string): Observable<Boolean> {
+
     return this.http
-      .post<Boolean>(this.serverUrl + 'workspace/rename', {ws: wsId, n: wsName})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .patch<Boolean>(this.serverUrl + `workspace/${wsId}`, {name: wsName})
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   deleteWorkspaces(workspaces: number[]): Observable<Boolean> {
+
     return this.http
       .post<Boolean>(this.serverUrl + 'workspaces/delete', {ws: workspaces})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   getUsersByWorkspace(workspaceId: number): Observable<IdRoleData[]> {
