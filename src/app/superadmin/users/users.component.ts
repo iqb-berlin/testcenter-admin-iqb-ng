@@ -173,7 +173,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           selectedRows.forEach((r: NameOnly) => usersToDelete.push(r.name));
           this.bs.deleteUsers(usersToDelete).subscribe(
             respOk => {
-              if (respOk) {
+              if (respOk !== false) {
                 this.snackBar.open('Nutzer gelöscht', '', {duration: 1000});
                 this.updateObjectList();
                 this.dataLoading = false;
