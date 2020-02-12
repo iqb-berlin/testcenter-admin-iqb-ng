@@ -13,31 +13,35 @@ export class BackendService {
     private http: HttpClient) {
     }
 
-  getUsers(): Observable<NameOnly[]> {
+  getUsers(): Observable<IdAndName[]> {
+
     return this.http
       .get<NameOnly[]>(this.serverUrl + 'users')
-        .pipe(
-          catchError(() => [])
-        );
+      .pipe(
+        catchError(() => [])
+      );
   }
 
   addUser(name: string, password: string): Observable<Boolean> {
+
     return this.http
       .put<Boolean>(this.serverUrl + 'user', {n: name, p: password})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   changePassword(userId: number, password: string): Observable<Boolean> {
+
     return this.http
       .patch<Boolean>(this.serverUrl + `user/${userId}/password`, {p: password})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   deleteUsers(users: string[]): Observable<Boolean> {
+
     return this.http
       .request<boolean>(
         'delete',
@@ -52,20 +56,22 @@ export class BackendService {
       );
   }
 
-  getWorkspacesByUser(username: string): Observable<IdRoleData[]> {
+  getWorkspacesByUser(userId: number): Observable<IdRoleData[]> {
+
     return this.http
-      .get<IdLabelSelectedData[]>(this.serverUrl + 'workspaces?u=' + username)
-        .pipe(
-          catchError(() => [])
-        );
+      .get<IdLabelSelectedData[]>(this.serverUrl + `user/${userId}/workspaces`)
+      .pipe(
+        catchError(() => [])
+      );
   }
 
-  setWorkspacesByUser(user: string, accessTo: IdRoleData[]): Observable<Boolean> {
+  setWorkspacesByUser(userId: number, accessTo: IdRoleData[]): Observable<Boolean> {
+
     return this.http
-      .post<Boolean>(this.serverUrl + 'user/workspaces', {u: user, ws: accessTo})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .patch<Boolean>(this.serverUrl + `user/${userId}/workspaces`, {ws: accessTo})
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   addWorkspace(name: string): Observable<Boolean> {
