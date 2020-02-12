@@ -221,7 +221,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
       this.dataLoading = true;
       this.bs.setUsersByWorkspace(this.selectedWorkspaceId, this.UserlistDatasource.data).subscribe(
         respOk => {
-          if (respOk) {
+          if (respOk !== false) {
             this.snackBar.open('Zugriffsrechte geändert', '', {duration: 1000});
           } else {
             this.snackBar.open('Konnte Zugriffsrechte nicht ändern', 'Fehler', {duration: 2000});

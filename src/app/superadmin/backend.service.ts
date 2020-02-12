@@ -17,106 +17,83 @@ export class BackendService {
 
     return this.http
       .get<NameOnly[]>(this.serverUrl + 'users')
-      .pipe(
-        catchError(() => [])
-      );
+      .pipe(catchError(() => []));
   }
 
   addUser(name: string, password: string): Observable<Boolean> {
 
     return this.http
       .put<Boolean>(this.serverUrl + 'user', {n: name, p: password})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   changePassword(userId: number, password: string): Observable<Boolean> {
 
     return this.http
       .patch<Boolean>(this.serverUrl + `user/${userId}/password`, {p: password})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   deleteUsers(users: string[]): Observable<Boolean> {
 
     return this.http
       .request<boolean>('delete', this.serverUrl + 'users', {body: {u: users}})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   getWorkspacesByUser(userId: number): Observable<IdRoleData[]> {
 
     return this.http
       .get<IdLabelSelectedData[]>(this.serverUrl + `user/${userId}/workspaces`)
-      .pipe(
-        catchError(() => [])
-      );
+      .pipe(catchError(() => []));
   }
 
   setWorkspacesByUser(userId: number, accessTo: IdRoleData[]): Observable<Boolean> {
 
     return this.http
       .patch<Boolean>(this.serverUrl + `user/${userId}/workspaces`, {ws: accessTo})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   addWorkspace(name: string): Observable<Boolean> {
 
     return this.http
       .put<Boolean>(this.serverUrl + 'workspace', {name: name})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   renameWorkspace(workspaceId: number, wsName: string): Observable<Boolean> {
 
     return this.http
       .patch<Boolean>(this.serverUrl + `workspace/${workspaceId}`, {name: wsName})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   deleteWorkspaces(workspaces: number[]): Observable<Boolean> {
 
     return this.http
       .request<Boolean>('delete', this.serverUrl + 'workspaces', {body: {ws: workspaces}})
-      .pipe(
-        catchError(() => of(false))
-      );
+      .pipe(catchError(() => of(false)));
   }
 
   getUsersByWorkspace(workspaceId: number): Observable<IdRoleData[]> {
 
     return this.http
       .get<IdRoleData[]>(this.serverUrl + `workspace/${workspaceId}/users`)
-      .pipe(
-        catchError(() => [])
-      );
+      .pipe(catchError(() => []));
   }
 
-  setUsersByWorkspace(workspace: number, accessing: IdRoleData[]): Observable<Boolean> {
+  setUsersByWorkspace(workspaceId: number, accessing: IdRoleData[]): Observable<Boolean> {
+
     return this.http
-      .post<Boolean>(this.serverUrl + 'workspace/users', {ws: workspace, u: accessing})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .patch<Boolean>(this.serverUrl + `workspace/${workspaceId}/users`, {u: accessing})
+      .pipe(catchError(() => of(false)));
   }
 
   getWorkspaces(): Observable<IdAndName[]> {
     return this.http
       .get<IdAndName[]>(this.serverUrl + 'workspaces')
-        .pipe(
-          catchError(() => [])
-        );
+      .pipe(catchError(() => []));
   }
 }
 
