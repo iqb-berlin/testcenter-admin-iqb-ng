@@ -75,11 +75,12 @@ export class BackendService {
   }
 
   addWorkspace(name: string): Observable<Boolean> {
+
     return this.http
-      .post<Boolean>(this.serverUrl + 'workspace/add', {n: name})
-        .pipe(
-          catchError(() => of(false))
-        );
+      .put<Boolean>(this.serverUrl + 'workspace', {name: name})
+      .pipe(
+        catchError(() => of(false))
+      );
   }
 
   renameWorkspace(wsId: number, wsName: string): Observable<Boolean> {
