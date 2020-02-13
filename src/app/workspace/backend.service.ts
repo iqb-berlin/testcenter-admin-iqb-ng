@@ -42,33 +42,33 @@ export class BackendService {
   checkWorkspace(workspaceId: number): Observable<CheckWorkspaceResponseData | ServerError> {
 
     return this.http
-      .get<CheckWorkspaceResponseData>(this.serverUrl + `/workspace/${workspaceId}/validation`, {})
+      .get<CheckWorkspaceResponseData>(this.serverUrl + `workspace/${workspaceId}/validation`, {})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   getBookletsStarted(workspaceId: number, groups: string[]): Observable<BookletsStarted[] | ServerError> {
 
     return this.http
-      .post<BookletsStarted[]>(this.serverUrl + `/workspace/${workspaceId}/booklets/started`, {groups: groups})
+      .post<BookletsStarted[]>(this.serverUrl + `workspace/${workspaceId}/booklets/started`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   lockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
 
     return this.http
-      .post<boolean>(this.serverUrl + `/workspace/${workspaceId}/lock`, {groups: groups})
+      .post<boolean>(this.serverUrl + `workspace/${workspaceId}/lock`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   unlockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
     return this.http
-      .post<boolean>(this.serverUrl + `/workspace/${workspaceId}/unlock`, {groups: groups})
+      .post<boolean>(this.serverUrl + `workspace/${workspaceId}/unlock`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
 }
 
   getMonitorData(workspaceId: number): Observable<MonitorData[] | ServerError> {
     return this.http
-      .get<MonitorData[]>(this.serverUrl + `/workspace/${workspaceId}/status`, {})
+      .get<MonitorData[]>(this.serverUrl + `workspace/${workspaceId}/status`, {})
         .pipe(
           catchError(ErrorHandler.handle)
         );
@@ -76,42 +76,38 @@ export class BackendService {
 
   getResultData(workspaceId: number): Observable<ResultData[]> {
     return this.http
-      .get<ResultData[]>(this.serverUrl + `/workspace/${workspaceId}/results`, {})
+      .get<ResultData[]>(this.serverUrl + `workspace/${workspaceId}/results`, {})
         .pipe(
           catchError(() => [])
         );
   }
 
-  getResponses(groups: string[]): Observable<UnitResponse[]> {
+  getResponses(workspaceId: number, groups: string[]): Observable<UnitResponse[]> {
+
     return this.http
-      .post<UnitResponse[]>(this.serverUrl + 'getResponses.php', {g: groups})
-        .pipe(
-          catchError(() => [])
-        );
+      .get<UnitResponse[]>(this.serverUrl + `workspace/${workspaceId}responses`, {params: {groups: groups.join(',')}})
+      .pipe(catchError(() => []));
   }
 
-  getLogs(groups: string[]): Observable<LogData[]> {
+  getLogs(workspaceId: number, groups: string[]): Observable<LogData[]> {
+
     return this.http
-      .post<LogData[]>(this.serverUrl + 'getLogs.php', {g: groups})
-        .pipe(
-          catchError(() => [])
-        );
+      .get<LogData[]>(this.serverUrl + `workspace/${workspaceId}logs`, {params: {groups: groups.join(',')}})
+      .pipe(catchError(() => []));
   }
 
-  getReviews(groups: string[]): Observable<ReviewData[]> {
+  getReviews(workspaceId: number, groups: string[]): Observable<ReviewData[]> {
+
     return this.http
-      .post<ReviewData[]>(this.serverUrl + 'getReviews.php', {g: groups})
-        .pipe(
-          catchError(() => [])
-        );
+      .get<ReviewData[]>(this.serverUrl + `workspace/${workspaceId}/reviews`, {params: {groups: groups.join(',')}})
+      .pipe(catchError(() => []));
   }
 
-  deleteData(groups: string[]): Observable<boolean | ServerError> {
+  deleteData(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
+
     return this.http
-      .post<boolean>(this.serverUrl + 'deleteData.php', {g: groups})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .request<boolean>('delete', this.serverUrl + `workspace/${workspaceId}/responses`, {body: {groups: groups}})
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   getSysCheckReportList(): Observable<SysCheckStatistics[] | ServerError> {
