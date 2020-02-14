@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { saveAs } from 'file-saver';
 import { SysCheckStatistics } from '../workspace.interfaces';
+import { WorkspaceDataService } from '../workspacedata.service';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { SysCheckStatistics } from '../workspace.interfaces';
   styleUrls: ['./syscheck.component.css']
 })
 export class SyscheckComponent implements OnInit {
-  displayedColumns: string[] = ['selectCheckbox', 'syscheckLabel', 'number', 'details'];
+  displayedColumns: string[] = ['selectCheckbox', 'syscheckLabel', 'number', 'details-os', 'details-browser'];
   public resultDataSource = new MatTableDataSource<SysCheckStatistics>([]);
   // prepared for selection if needed sometime
   public tableselectionCheckbox = new SelectionModel<SysCheckStatistics>(true, []);
@@ -26,6 +27,7 @@ export class SyscheckComponent implements OnInit {
   constructor(
     private bs: BackendService,
     private deleteConfirmDialog: MatDialog,
+    public wds: WorkspaceDataService,
     public snackBar: MatSnackBar
   ) {
   }
@@ -37,7 +39,7 @@ export class SyscheckComponent implements OnInit {
   updateTable() {
     this.dataLoading = true;
     this.tableselectionCheckbox.clear();
-    this.bs.getSysCheckReportList().subscribe(
+    this.bs.getSysCheckReportList(this.wds.ws).subscribe(
       (resultData: SysCheckStatistics[]) => {
         this.dataLoading = false;
         this.resultDataSource = new MatTableDataSource<SysCheckStatistics>(resultData);
@@ -66,15 +68,11 @@ export class SyscheckComponent implements OnInit {
       this.tableselectionCheckbox.selected.forEach(element => {
         selectedReports.push(element.id);
       });
-      this.bs.getSysCheckReport(selectedReports, ';', '"').subscribe(
-      (reportData: string[]) => {
+      this.bs.getSysCheckReport(this.wds.ws, selectedReports, ';', '"', '\n').subscribe(
+      (reportData: string) => {
+        console.log(reportData);
         if (reportData.length > 0) {
-          const lineDelimiter = '\n';
-          let myCsvData = '';
-          reportData.forEach((repLine: string) => {
-            myCsvData += repLine + lineDelimiter;
-          });
-          const blob = new Blob([myCsvData], {type: 'text/csv;charset=utf-8'});
+          const blob = new Blob([reportData], {type: 'text/csv;charset=utf-8'});
           saveAs(blob, 'iqb-testcenter-syscheckreports.csv');
         } else {
           this.snackBar.open('Keine Daten verfügbar.', 'Fehler', {duration: 3000});

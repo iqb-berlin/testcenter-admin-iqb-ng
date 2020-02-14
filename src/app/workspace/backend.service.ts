@@ -110,28 +110,33 @@ export class BackendService {
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  getSysCheckReportList(): Observable<SysCheckStatistics[] | ServerError> {
-    const loginData = this.mds.loginData$.getValue();
+  getSysCheckReportList(workspaceId: number): Observable<SysCheckStatistics[] | ServerError> {
+
     return this.http
-      .post<SysCheckStatistics[]>(this.serverUrlSysCheck + 'getSysCheckReportList.php',
-        {ws: this.wds.workspaceId$.getValue(), at: loginData.admintoken})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .get<ReviewData[]>(this.serverUrl + `workspace/${workspaceId}/syscheck-reports/overview`)
+      .pipe(catchError(() => []));
   }
 
-  getSysCheckReport(reports: string[], columnDelimiter: string,
-                    quoteChar: string): Observable<string[] | ServerError> {
-    const loginData = this.mds.loginData$.getValue();
+  getSysCheckReport(workspaceId: number, reports: string[], enclosure: string,
+                    columnDelimiter: string, lineEnding: string): Observable<string | ServerError> {
+
     return this.http
-      .post<string[]>(this.serverUrlSysCheck + 'getSysCheckReport.php',
-        {r: reports, cd: columnDelimiter, q: quoteChar, ws: this.wds.workspaceId$.getValue(), at: loginData.admintoken})
-          .pipe(
-            catchError(ErrorHandler.handle)
-          );
+      .get<string>(this.serverUrl + `workspace/${workspaceId}/syscheck-reports`,
+        {
+          params: {
+            checkIds: reports.join(','),
+            delimiter: columnDelimiter,
+            enclosure: enclosure,
+            lineEnding: lineEnding
+          },
+          headers: {
+            'Accept': 'text/csv'
+          }
+        })
+      .pipe(catchError(ErrorHandler.handle));
   }
 
-  deleteSysCheckReports(reports: string[]): Observable<boolean | ServerError> {
+  deleteSysCheckReports(reports: string[]): Observable <boolean|ServerError> {
     const loginData = this.mds.loginData$.getValue();
     return this.http
       .post<boolean>(this.serverUrlSysCheck + 'deleteSysCheckReports.php',
