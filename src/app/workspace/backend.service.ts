@@ -53,25 +53,25 @@ export class BackendService {
   }
 
   unlockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
+
     return this.http
       .post<boolean>(this.serverUrl + `workspace/${workspaceId}/unlock`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
-}
+  }
+
 
   getMonitorData(workspaceId: number): Observable<MonitorData[] | ServerError> {
+
     return this.http
       .get<MonitorData[]>(this.serverUrl + `workspace/${workspaceId}/status`, {})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
-}
+      .pipe(catchError(ErrorHandler.handle));
+  }
 
   getResultData(workspaceId: number): Observable<ResultData[]> {
+
     return this.http
       .get<ResultData[]>(this.serverUrl + `workspace/${workspaceId}/results`, {})
-        .pipe(
-          catchError(() => [])
-        );
+      .pipe(catchError(() => []));
   }
 
   getResponses(workspaceId: number, groups: string[]): Observable<UnitResponse[]> {
