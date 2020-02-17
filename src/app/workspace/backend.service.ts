@@ -117,11 +117,11 @@ export class BackendService {
       .pipe(catchError(() => []));
   }
 
-  getSysCheckReport(workspaceId: number, reports: string[], enclosure: string,
-                    columnDelimiter: string, lineEnding: string): Observable<string | ServerError> {
+  getSysCheckReport(workspaceId: number, reports: string[], enclosure: string, columnDelimiter: string, lineEnding: string)
+    : Observable<Blob|ServerError> {
 
     return this.http
-      .get<string>(this.serverUrl + `workspace/${workspaceId}/syscheck-reports`,
+      .get(this.serverUrl + `workspace/${workspaceId}/syscheck-reports`,
         {
           params: {
             checkIds: reports.join(','),
@@ -131,19 +131,17 @@ export class BackendService {
           },
           headers: {
             'Accept': 'text/csv'
-          }
+          },
+          responseType: 'blob'
         })
       .pipe(catchError(ErrorHandler.handle));
   }
 
-  deleteSysCheckReports(reports: string[]): Observable <boolean|ServerError> {
-    const loginData = this.mds.loginData$.getValue();
+  deleteSysCheckReports(workspaceId: number, checkIds: string[]): Observable <FileDeletionReport|ServerError> {
+
     return this.http
-      .post<boolean>(this.serverUrlSysCheck + 'deleteSysCheckReports.php',
-        {r: reports, ws: this.wds.workspaceId$.getValue(), at: loginData.admintoken})
-          .pipe(
-            catchError(ErrorHandler.handle)
-          );
+      .request<FileDeletionReport>('delete', this.serverUrl + `workspace/${workspaceId}/syscheck-reports`, {body: {checkIds: checkIds}})
+      .pipe(catchError(ErrorHandler.handle));
   }
 }
 

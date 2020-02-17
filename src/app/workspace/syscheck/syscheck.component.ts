@@ -1,4 +1,4 @@
-import { ConfirmDialogComponent, ConfirmDialogData } from 'iqb-components';
+import {ConfirmDialogComponent, ConfirmDialogData, ServerError} from 'iqb-components';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -60,20 +60,20 @@ export class SyscheckComponent implements OnInit {
         this.resultDataSource.data.forEach(row => this.tableselectionCheckbox.select(row));
   }
 
-  // 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+
   downloadReportsCSV() {
+
     if (this.tableselectionCheckbox.selected.length > 0) {
       this.dataLoading = true;
       const selectedReports: string[] = [];
       this.tableselectionCheckbox.selected.forEach(element => {
         selectedReports.push(element.id);
       });
+      // TODO determine OS dependent line ending char and use this
       this.bs.getSysCheckReport(this.wds.ws, selectedReports, ';', '"', '\n').subscribe(
-      (reportData: string) => {
-        console.log(reportData);
-        if (reportData.length > 0) {
-          const blob = new Blob([reportData], {type: 'text/csv;charset=utf-8'});
-          saveAs(blob, 'iqb-testcenter-syscheckreports.csv');
+      (reportData: Blob) => {
+        if (reportData.size > 0) {
+          saveAs(reportData, 'iqb-testcenter-syscheckreports.csv');
         } else {
           this.snackBar.open('Keine Daten verfügbar.', 'Fehler', {duration: 3000});
         }
@@ -108,15 +108,32 @@ export class SyscheckComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
+
         if (result !== false) {
-          // =========================================================
+
           this.dataLoading = true;
-          this.bs.deleteSysCheckReports(selectedReports).subscribe(() => {
-                  this.tableselectionCheckbox.clear();
-                  this.dataLoading = false;
-                });
-          }
-        });
+          this.bs.deleteSysCheckReports(this.wds.ws, selectedReports).subscribe((fileDeletionReport) => {
+
+            if (fileDeletionReport instanceof ServerError) {
+              this.wds.setNewErrorMsg(fileDeletionReport as ServerError);
+            } else {
+
+              const message = [];
+              if (fileDeletionReport.deleted.length > 0) {
+                message.push(fileDeletionReport.deleted.length + ' Dateien erfolgreich gelöscht.');
+              }
+              if (fileDeletionReport.not_allowed.length > 0) {
+                message.push(fileDeletionReport.not_allowed.length + ' Dateien konnten nicht gelöscht werden.');
+              }
+
+              this.snackBar.open(message.join('<br>'), message.length > 1 ? 'Achtung' : '', {duration: 1000});
+
+              this.updateTable();
+              this.wds.setNewErrorMsg();
+            }
+          });
+        }
+      });
     }
   }
 }
