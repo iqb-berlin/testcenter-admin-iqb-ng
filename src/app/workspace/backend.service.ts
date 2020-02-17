@@ -4,24 +4,16 @@ import {Injectable, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {WorkspaceDataService} from './workspacedata.service';
-import {MainDataService} from '../maindata.service';
 import { ErrorHandler, ServerError } from 'iqb-components';
 
 @Injectable()
-
 export class BackendService {
-  private serverUrlSlim = '';
-  private serverUrlSysCheck = '';
+
 
   constructor(
     @Inject('SERVER_URL') private readonly serverUrl: string,
-    private http: HttpClient,
-    private wds: WorkspaceDataService,
-    private mds: MainDataService) {
-
-    this.serverUrlSlim = this.serverUrl + 'php/ws.php/';
-    this.serverUrlSysCheck = this.serverUrl + 'php_admin/';
+    private http: HttpClient
+  ) {
   }
 
 
