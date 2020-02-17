@@ -135,6 +135,13 @@ export class BackendService {
       .request<FileDeletionReport>('delete', this.serverUrl + `workspace/${workspaceId}/syscheck-reports`, {body: {checkIds: checkIds}})
       .pipe(catchError(ErrorHandler.handle));
   }
+
+  downloadFile(workspaceId: number, fileType: string, fileName: string): Observable<Blob|ServerError> {
+
+    return this.http
+      .get(this.serverUrl + `workspace/${workspaceId}/file/${fileType}/${fileName}`, {responseType: 'blob'})
+      .pipe(catchError(ErrorHandler.handle));
+  }
 }
 
 export interface FileDeletionReport {

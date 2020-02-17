@@ -91,6 +91,7 @@ export class BackendService {
   }
 
   getWorkspaces(): Observable<IdAndName[]> {
+
     return this.http
       .get<IdAndName[]>(this.serverUrl + 'workspaces')
       .pipe(catchError(() => []));

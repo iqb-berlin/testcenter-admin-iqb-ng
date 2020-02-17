@@ -11,6 +11,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
+import { saveAs } from 'file-saver';
 
 @Component({
   templateUrl: './files.component.html',
@@ -42,7 +43,10 @@ export class FilesComponent implements OnInit, OnDestroy {
     public messsageDialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
-    this.uploadUrl = this.serverUrl + 'php/uploadFile.php';
+    this.wds.workspaceId$.subscribe(workspaceId => {
+      this.uploadUrl = this.serverUrl + `workspace/${workspaceId}/file`;
+    });
+    this.uploadUrl = this.serverUrl + this.wds.ws + '/file';
   }
 
   ngOnInit() {
@@ -152,14 +156,25 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ***********************************************************************************
-  getDownloadRef(element: GetFileResponseData): string {
-    return this.serverUrl
-        + 'php/getFile.php?t=' + element.type
-        + '&fn=' + element.filename
-        + '&at=' + this.mds.adminToken
-        + '&ws=' + this.wds.ws.toString();
+
+  download(element: GetFileResponseData): void {
+
+    this.dataLoading = true;
+    this.bs.downloadFile(this.wds.ws, element.type, element.filename)
+      .subscribe(
+        (fileData: Blob|ServerError) => {
+          if (fileData instanceof ServerError) {
+            this.wds.setNewErrorMsg(fileData);
+            this.dataLoading = false;
+          } else {
+            saveAs(fileData, element.filename);
+            this.wds.setNewErrorMsg();
+            this.dataLoading = false;
+          }
+        }
+      );
   }
+
 
   checkWorkspace() {
     this.checkErrors = [];
