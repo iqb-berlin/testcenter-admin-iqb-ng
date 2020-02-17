@@ -12,23 +12,19 @@ export class BackendService {
   constructor(
       @Inject('SERVER_URL') private serverUrl: string,
       private http: HttpClient) {
-
-    this.serverUrl = this.serverUrl + 'php/';
   }
 
   login(name: string, password: string): Observable<LoginData | ServerError> {
+
     return this.http
-      .post<LoginData>(this.serverUrl + 'login.php/login', {n: name, p: password})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .post<LoginData>(this.serverUrl + 'login', {n: name, p: password})
+      .pipe(catchError(ErrorHandler.handle));
   }
 
   getLoginData(adminToken: string): Observable<LoginData | ServerError> {
+
     return this.http
-      .post<LoginData>(this.serverUrl + 'login.php/login', {at: adminToken})
-        .pipe(
-          catchError(ErrorHandler.handle)
-        );
+      .post<LoginData>(this.serverUrl + 'login', {at: adminToken})
+      .pipe(catchError(ErrorHandler.handle));
   }
 }
