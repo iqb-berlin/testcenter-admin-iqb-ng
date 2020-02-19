@@ -41,7 +41,7 @@ export class BackendService {
   getBookletsStarted(workspaceId: number, groups: string[]): Observable<BookletsStarted[] | ServerError> {
 
     return this.http
-      .post<BookletsStarted[]>(this.serverUrl + `workspace/${workspaceId}/booklets/started`, {groups: groups})
+      .get<BookletsStarted[]>(this.serverUrl + `workspace/${workspaceId}/booklets/started`, {params: {groups: groups.join(',')}})
       .pipe(catchError(ErrorHandler.handle));
   }
 
