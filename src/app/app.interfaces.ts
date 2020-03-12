@@ -5,8 +5,8 @@ export interface WorkspaceData {
 }
 
 export interface LoginData {
-  admintoken: string;
+  adminToken: string;
   name: string;
   workspaces: WorkspaceData[];
-  is_superadmin: boolean;
+  isSuperadmin: boolean;
 }

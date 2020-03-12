@@ -8,16 +8,16 @@ import { ServerError } from 'iqb-components';
 })
 export class MainDataService {
   private static defaultLoginData: LoginData = {
-    admintoken: '',
+    adminToken: '',
     name: '',
     workspaces: [],
-    is_superadmin: false
+    isSuperadmin: false
   };
 
   public get adminToken(): string {
     const myLoginData = this.loginData$.getValue();
     if (myLoginData) {
-      return myLoginData.admintoken;
+      return myLoginData.adminToken;
     } else {
       return '';
     }
@@ -30,24 +30,24 @@ export class MainDataService {
 
   setNewLoginData(logindata?: LoginData) {
     const myLoginData: LoginData = {
-      admintoken: MainDataService.defaultLoginData.admintoken,
+      adminToken: MainDataService.defaultLoginData.adminToken,
       name: MainDataService.defaultLoginData.name,
       workspaces: MainDataService.defaultLoginData.workspaces,
-      is_superadmin: MainDataService.defaultLoginData.is_superadmin
+      isSuperadmin: MainDataService.defaultLoginData.isSuperadmin
     };
 
     if (logindata) {
       if (
-        (logindata.admintoken.length > 0) &&
+        (logindata.adminToken.length > 0) &&
         (logindata.name.length > 0)) {
-          myLoginData.admintoken = logindata.admintoken;
+          myLoginData.adminToken = logindata.adminToken;
           myLoginData.name = logindata.name;
           myLoginData.workspaces = logindata.workspaces;
-          myLoginData.is_superadmin = logindata.is_superadmin;
+          myLoginData.isSuperadmin = logindata.isSuperadmin;
       }
     }
     this.loginData$.next(myLoginData);
-    localStorage.setItem('at', myLoginData.admintoken);
+    localStorage.setItem('at', myLoginData.adminToken);
   }
 
   setNewErrorMsg(err: ServerError = null) {
@@ -60,7 +60,7 @@ export class MainDataService {
       const myLoginData = this.loginData$.getValue();
       if ((myLoginData !== null) && (myLoginData.workspaces.length > 0)) {
         for (let i = 0; i < myLoginData.workspaces.length; i++) {
-          if (myLoginData.workspaces[i].id == ws) {
+          if (myLoginData.workspaces[i].id === ws) {
             myreturn = myLoginData.workspaces[i].name;
             break;
           }
@@ -76,7 +76,7 @@ export class MainDataService {
       const myLoginData = this.loginData$.getValue();
       if ((myLoginData !== null) && (myLoginData.workspaces.length > 0)) {
         for (let i = 0; i < myLoginData.workspaces.length; i++) {
-          if (myLoginData.workspaces[i].id == ws) {
+          if (myLoginData.workspaces[i].id === ws) {
             myreturn = myLoginData.workspaces[i].role;
             break;
           }

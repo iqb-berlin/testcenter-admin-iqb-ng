@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  testcenterUrl: 'http://localhost/testcenter-iqb-php/',
+  testcenterUrl: 'http://localhost/2020/testcenter-iqb-php/',
   appName: 'IQB-Testcenter Verwaltung',
   appPublisher: 'IQB - Institut zur Qualitätsentwicklung im Bildungswesen',
   appVersion: '0.53.4 (dev)'

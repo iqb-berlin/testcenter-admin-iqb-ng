@@ -17,14 +17,15 @@ export class BackendService {
   login(name: string, password: string): Observable<LoginData | ServerError> {
 
     return this.http
-      .post<LoginData>(this.serverUrl + 'login', {n: name, p: password})
+      .put<LoginData>(this.serverUrl + 'session/admin', {name, password})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   getLoginData(adminToken: string): Observable<LoginData | ServerError> {
 
+    const authToken = JSON.stringify({at: adminToken});
     return this.http
-      .post<LoginData>(this.serverUrl + 'login', {at: adminToken})
+      .get<LoginData>(this.serverUrl + 'sesion', {headers: {'AuthToken': authToken}})
       .pipe(catchError(ErrorHandler.handle));
   }
 }

@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
       if (authDataStr) {
         authData = JSON.parse(authDataStr);
       }
-      authData['at'] = loginData.admintoken;
+      authData['at'] = loginData.adminToken;
       return next.handle(request.clone({
         setHeaders: {
           AuthToken: JSON.stringify(authData)

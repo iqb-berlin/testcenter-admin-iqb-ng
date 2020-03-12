@@ -28,7 +28,7 @@ export class StartComponent implements OnInit, OnDestroy {
       testpw: this.fb.control('', [Validators.required, Validators.minLength(3)])
     });
     this.loginDataSubscription = this.mds.loginData$.subscribe(logindata => {
-      this.showLogin = logindata.admintoken.length === 0;
+      this.showLogin = logindata.adminToken.length === 0;
     });
   }
 
