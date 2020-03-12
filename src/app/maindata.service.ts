@@ -60,7 +60,8 @@ export class MainDataService {
       const myLoginData = this.loginData$.getValue();
       if ((myLoginData !== null) && (myLoginData.workspaces.length > 0)) {
         for (let i = 0; i < myLoginData.workspaces.length; i++) {
-          if (myLoginData.workspaces[i].id === ws) {
+          // tslint:disable-next-line:triple-equals - one is float, other is int
+          if (myLoginData.workspaces[i].id == ws) {
             myreturn = myLoginData.workspaces[i].name;
             break;
           }
@@ -76,7 +77,8 @@ export class MainDataService {
       const myLoginData = this.loginData$.getValue();
       if ((myLoginData !== null) && (myLoginData.workspaces.length > 0)) {
         for (let i = 0; i < myLoginData.workspaces.length; i++) {
-          if (myLoginData.workspaces[i].id === ws) {
+          // tslint:disable-next-line:triple-equals - one is float, other is int
+          if (myLoginData.workspaces[i].id == ws) {
             myreturn = myLoginData.workspaces[i].role;
             break;
           }
