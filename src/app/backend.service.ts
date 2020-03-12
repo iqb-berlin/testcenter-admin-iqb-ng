@@ -21,11 +21,12 @@ export class BackendService {
       .pipe(catchError(ErrorHandler.handle));
   }
 
+  // TODO check after merge of tc and tc-admin -> adminToken is empty after F5-reload, but works in tc
   getLoginData(adminToken: string): Observable<LoginData | ServerError> {
 
     const authToken = JSON.stringify({at: adminToken});
     return this.http
-      .get<LoginData>(this.serverUrl + 'sesion', {headers: {'AuthToken': authToken}})
+      .get<LoginData>(this.serverUrl + 'session', {headers: {'AuthToken': authToken}})
       .pipe(catchError(ErrorHandler.handle));
   }
 }
