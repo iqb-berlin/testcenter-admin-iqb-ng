@@ -48,14 +48,14 @@ export class BackendService {
   lockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
 
     return this.http
-      .post<boolean>(this.serverUrl + `workspace/${workspaceId}/lock`, {groups: groups})
+      .patch<boolean>(this.serverUrl + `workspace/${workspaceId}/tests/lock`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
   }
 
   unlockBooklets(workspaceId: number, groups: string[]): Observable<boolean | ServerError> {
 
     return this.http
-      .post<boolean>(this.serverUrl + `workspace/${workspaceId}/unlock`, {groups: groups})
+      .patch<boolean>(this.serverUrl + `workspace/${workspaceId}/tests/unlock`, {groups: groups})
       .pipe(catchError(ErrorHandler.handle));
   }
 
