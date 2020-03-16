@@ -105,7 +105,7 @@ export class BackendService {
   getSysCheckReportList(workspaceId: number): Observable<SysCheckStatistics[] | ServerError> {
 
     return this.http
-      .get<ReviewData[]>(this.serverUrl + `workspace/${workspaceId}/syscheck-reports/overview`)
+      .get<ReviewData[]>(this.serverUrl + `workspace/${workspaceId}/sys-check/reports/overview`)
       .pipe(catchError(() => []));
   }
 
@@ -113,7 +113,7 @@ export class BackendService {
     : Observable<Blob|ServerError> {
 
     return this.http
-      .get(this.serverUrl + `workspace/${workspaceId}/syscheck-reports`,
+      .get(this.serverUrl + `workspace/${workspaceId}/sys-check/reports`,
         {
           params: {
             checkIds: reports.join(','),
@@ -132,7 +132,7 @@ export class BackendService {
   deleteSysCheckReports(workspaceId: number, checkIds: string[]): Observable <FileDeletionReport|ServerError> {
 
     return this.http
-      .request<FileDeletionReport>('delete', this.serverUrl + `workspace/${workspaceId}/syscheck-reports`, {body: {checkIds: checkIds}})
+      .request<FileDeletionReport>('delete', this.serverUrl + `workspace/${workspaceId}/sys-check/reports`, {body: {checkIds: checkIds}})
       .pipe(catchError(ErrorHandler.handle));
   }
 
